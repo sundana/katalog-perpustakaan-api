@@ -4,10 +4,13 @@ const {
   registerBook,
   getCatalogues,
   deleteBook,
+  searchCatalogue,
+  editBook,
 } = require('../controllers/catalogueController');
 
 router.get('/', getCatalogues);
+router.get('/search', searchCatalogue);
 router.post('/register', registerBook);
-router.delete('/:id', deleteBook);
+router.put('/:id', editBook).delete('/:id', deleteBook);
 
 module.exports = router;

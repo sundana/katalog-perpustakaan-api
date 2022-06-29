@@ -37,8 +37,43 @@ const getCatalogues = async (req, res) => {
   }
 };
 
+// @desc    Search query
+// @route   GET /api/catalogue/search
+// @access  Private
+const searchCatalogue = async (req, res) => {
+  try {
+    const book = await Book.find(req.query);
+    if (book === []) {
+      res.status(400).json({ message: 'Data not found' });
+    } else {
+      res.status(200).json(book);
+    }
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
+
+// @desc    Edit a book
+// @route   PUT /api/catalogue/:id
+// Access   Private
+const editBook = async (req, res) => {
+  const { title, writer, publisher, year } = req.body;
+  const updatedBook = await Book.findByIdAndUpdate(req.params.id, {
+    title,
+    writer,
+    publisher,
+    year,
+  });
+  if (updatedBook) {
+    res.status(200).json(updatedBook);
+  } else {
+    throw new Error('Update fails');
+  }
+};
+
 // @desc    Delete a book
-// @route   /api/catalogue/:id
+// @route   Delete /api/catalogue/:id
 // Access   Private
 const deleteBook = async (req, res) => {
   const book = await Book.findById(req.params.id);
@@ -57,4 +92,6 @@ module.exports = {
   registerBook,
   getCatalogues,
   deleteBook,
+  searchCatalogue,
+  editBook,
 };
