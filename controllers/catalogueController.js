@@ -58,13 +58,7 @@ const searchCatalogue = async (req, res) => {
 // @route   PUT /api/catalogue/:id
 // Access   Private
 const editBook = async (req, res) => {
-  const { title, writer, publisher, year } = req.body;
-  const updatedBook = await Book.findByIdAndUpdate(req.params.id, {
-    title,
-    writer,
-    publisher,
-    year,
-  });
+  const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body);
   if (updatedBook) {
     res.status(200).json(updatedBook);
   } else {
