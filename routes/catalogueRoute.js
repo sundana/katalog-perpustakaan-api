@@ -7,10 +7,11 @@ const {
   searchCatalogue,
   editBook,
 } = require('../controllers/catalogueController');
+const { protect } = require('../middleware/authMiddleware');
 
-router.get('/', getCatalogues);
-router.get('/search', searchCatalogue);
-router.post('/register', registerBook);
-router.put('/:id', editBook).delete('/:id', deleteBook);
+router.get('/', protect, getCatalogues);
+router.get('/search', protect, searchCatalogue);
+router.post('/register', protect, registerBook);
+router.put('/:id', protect, editBook).delete('/:id', protect, deleteBook);
 
 module.exports = router;
