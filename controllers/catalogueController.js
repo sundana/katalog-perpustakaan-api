@@ -1,9 +1,10 @@
 const Book = require('../models/bookModel');
+const asyncHandler = require('express-async-handler');
 
 // @desc    Register a book
 // @route   POST /api/catalogue/register
 // @access  Public
-const registerBook = async (req, res) => {
+const registerBook = asyncHandler(async (req, res) => {
   const { title, writer, publisher, year } = req.body;
   const book = await Book.create({
     title,
@@ -22,12 +23,12 @@ const registerBook = async (req, res) => {
     res.status(400);
     throw new Error('Failed to register a book');
   }
-};
+});
 
 // Desc     Get all catalogues
 // router   GET /api/catalogues
 // Access   Private
-const getCatalogues = async (req, res) => {
+const getCatalogues = asyncHandler(async (req, res) => {
   const books = await Book.find({});
   if (books) {
     res.status(200).json(books);
@@ -35,41 +36,36 @@ const getCatalogues = async (req, res) => {
     res.status(400);
     throw new Error('Request Failed');
   }
-};
+});
 
 // @desc    Search query
 // @route   GET /api/catalogue/search
 // @access  Private
-const searchCatalogue = async (req, res) => {
-  try {
-    const book = await Book.find(req.query);
-    if (book === []) {
-      res.status(400).json({ message: 'Data not found' });
-    } else {
-      res.status(200).json(book);
-    }
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
+const searchCatalogue = asyncHandler(async (req, res) => {
+  const book = await Book.find(req.query);
+  if (book === []) {
+    res.status(400).json({ message: 'Data not found' });
+  } else {
+    res.status(200).json(book);
   }
-};
+});
 
 // @desc    Edit a book
 // @route   PUT /api/catalogue/:id
 // Access   Private
-const editBook = async (req, res) => {
+const editBook = asyncHandler(async (req, res) => {
   const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body);
   if (updatedBook) {
     res.status(200).json(updatedBook);
   } else {
     throw new Error('Update fails');
   }
-};
+});
 
 // @desc    Delete a book
 // @route   Delete /api/catalogue/:id
 // Access   Private
-const deleteBook = async (req, res) => {
+const deleteBook = asyncHandler(async (req, res) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
     res.status(400);
@@ -80,7 +76,7 @@ const deleteBook = async (req, res) => {
       id: book._id,
     });
   }
-};
+});
 
 module.exports = {
   registerBook,
